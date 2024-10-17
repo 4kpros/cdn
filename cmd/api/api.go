@@ -56,8 +56,8 @@ func Start() {
 	humaApi := humagin.NewWithGroup(engine, ginGroup, humaConfig)
 	// Register middlewares
 	humaApi.UseMiddleware(
-		middlewares.CORSMiddleware(humaApi),
 		middlewares.HeadersMiddleware(humaApi),
+		middlewares.CorsMiddleware(humaApi),
 	)
 
 	// Register endpoints

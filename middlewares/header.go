@@ -14,7 +14,6 @@ func HeadersMiddleware(api huma.API) func(huma.Context, func(huma.Context)) {
 		ctx.SetHeader("X-Xss-Protection", "1; mode=block")
 		ctx.SetHeader("Content-Security-Policy", "default-src 'self'")
 		ctx.SetHeader("Referrer-Policy", "strict-origin-when-cross-origin")
-		ctx.SetHeader("X-Download-Options", "noopen")
 		ctx.SetHeader("Strict-Transport-Security", fmt.Sprintf("max-age=%d; %s", 31536000, "includeSubDomains"))
 
 		next(ctx)

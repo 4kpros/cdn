@@ -1,7 +1,9 @@
 package config
 
 import (
+	"cdn/common/constants"
 	"cdn/common/helpers"
+	"cdn/common/utils"
 
 	"go.uber.org/zap"
 )
@@ -13,6 +15,8 @@ type OpenAPITemplate struct {
 	Swagger   *string
 }
 
+const subDir = "/openapi"
+
 var OpenAPITemplates = &OpenAPITemplate{}
 
 // Loads OpenAPI templates from a specified location resources.
@@ -21,7 +25,7 @@ func LoadOpenAPITemplates() error {
 	var errRead error
 
 	// Redocly
-	OpenAPITemplates.Redocly, errRead = helpers.ReadFileContentToString("templates/openapi/redocly.html")
+	OpenAPITemplates.Redocly, errRead = utils.ReadFileToString(constants.ASSET_TEMPLATES_PATH + subDir + "/redocly.html")
 	if errRead != nil {
 		err = errRead
 		helpers.Logger.Warn(
@@ -33,7 +37,7 @@ func LoadOpenAPITemplates() error {
 	}
 
 	// Scalar
-	OpenAPITemplates.Scalar, err = helpers.ReadFileContentToString("templates/openapi/scalar.html")
+	OpenAPITemplates.Scalar, err = utils.ReadFileToString(constants.ASSET_TEMPLATES_PATH + subDir + "/scalar.html")
 	if errRead != nil {
 		helpers.Logger.Warn(
 			"Failed to load OpenAPI Scalar template",
@@ -44,7 +48,7 @@ func LoadOpenAPITemplates() error {
 	}
 
 	// Stoplight
-	OpenAPITemplates.Stoplight, errRead = helpers.ReadFileContentToString("templates/openapi/stoplight.html")
+	OpenAPITemplates.Stoplight, errRead = utils.ReadFileToString(constants.ASSET_TEMPLATES_PATH + subDir + "/stoplight.html")
 	if errRead != nil {
 		err = errRead
 		helpers.Logger.Warn(
@@ -56,7 +60,7 @@ func LoadOpenAPITemplates() error {
 	}
 
 	// Swagger
-	OpenAPITemplates.Swagger, errRead = helpers.ReadFileContentToString("templates/openapi/swagger.html")
+	OpenAPITemplates.Swagger, errRead = utils.ReadFileToString(constants.ASSET_TEMPLATES_PATH + subDir + "/swagger.html")
 	if errRead != nil {
 		err = errRead
 		helpers.Logger.Warn(

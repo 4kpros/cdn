@@ -21,19 +21,9 @@ It provides a clean and consistent interface for accessing and managing data, ma
 
   - Make installed for shortcuts
 
-  - Docker installed if you want to build and start postgres or redis containers
-
-  - Build and start Redis container with the command ```make docker-redis```
-
-  - Build and start postgres container with the command ```make docker-postgres```
+  - Docker installed
 
   - Rename .env.example to ```app.env```
-
-  - JWT .pem files with ES212(ECDSA SHA-512) algorithm: ```keys/jwt/private.pem``` ```keys/jwt/public.pem```
-    You ca use this website to generate JWT keys for your tests [JWT online generator](https://jwt-keys.21no.de/) 
-
-  - Password is hashed using Argon2id algorithm. If you want to customize salinity, you can edit the .env.example file
-
 
   Others information such configurations are on ```app.env```
 
@@ -77,36 +67,7 @@ make scan
 
 # Features
 
-- [x] History
-
-- [x] Roles
-
-- [x] Permissions
-
-- [x] Authentication
-
-- [x] Users
-
-- [...] Add 2FA and passKey, add Google reCAPTCHA to all endpoints starting with /auth
-
-- [...] Add tests
-
-- [...] Update GitHub workflow(build image)
-
-
-Amazing API documentation. You can choose between 4 templates: Scalar(Default), Redocly, Stoplight, Swagger. 
-
-<ins>Scalar(default) template screenshot</ins>
-![OpenAPI-Scalar](https://github.com/user-attachments/assets/0092f0e1-e2c5-4e38-a618-437097327e24)
-
-<ins>Redocly template screenshot</ins>
-![OpenAPI-Redocly](https://github.com/user-attachments/assets/1e1708aa-f355-446d-aa19-9f2ab16e08fa)
-
-<ins>Stoplight template screenshot</ins>
-![OpenAPI-Stoplight](https://github.com/user-attachments/assets/fa0595e6-46f2-48aa-a379-af19a854bc06)
-
-<ins>Swagger template screenshot</ins>
-![OpenAPI-Swagger](https://github.com/user-attachments/assets/823fbfe6-7886-450d-b58f-81b66b13f2b4)
+- [x] Images
 
 
 # Contributing

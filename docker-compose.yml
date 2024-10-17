@@ -1,18 +1,18 @@
 services:
-  api-cdn:
-    container_name: api-cdn
+  cdn:
+    container_name: cdn
     build:
       context: .
-      target: api-cdn
+      target: cdn
       dockerfile: ./Dockerfile
     restart: on-failure
     environment:
       APP_PORT: ${APP_PORT:-3100}
       GIN_MODE: ${GIN_MODE:-debug} # debug, release
     volumes:
-      - api-cdn-data:/data
+      - cdn-data:/app/assets
     ports:
       - ${APP_PORT:-3100}:3100
 
 volumes:
-  api-cdn-data:
+  cdn-data:

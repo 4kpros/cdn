@@ -5,15 +5,13 @@ import (
 	"cdn/common/utils"
 	"cdn/services/image/data"
 	"context"
-	"fmt"
-	"io"
-	"mime/multipart"
-	"os"
-	"path/filepath"
+	"net/http"
 )
 
 type Service struct {
 }
+
+const subDir = "/images"
 
 func NewService() *Service {
 	return &Service{}
@@ -23,58 +21,69 @@ func NewService() *Service {
 func (service *Service) Create(
 	ctx *context.Context,
 	input *data.ImageData,
-) (result *data.ImageResponse, errCode int, err error) {
-	defer func(File multipart.File) {
-		err := File.Close()
-		if err != nil {
-			return
-		}
-	}(input.Image.File)
-
-	//3. Create a temporary file to our directory
-	tempFolderPath := fmt.Sprintf("%s%s", constants.RootPath, "/tempFiles")
-	tempFileName := fmt.Sprintf("upload-%s-*.%s", utils.FileNameWithoutExtension(input.Image.Filename), filepath.Ext(input.Image.Filename))
-
-	tempFile, err := os.CreateTemp(tempFolderPath, tempFileName)
+) (result *data.UploadImageResponse, errCode int, err error) {
+	// Read buffer
+	buffer, err := utils.ReadMultipartFile(input.Image.File)
 	if err != nil {
+		errCode = http.StatusInternalServerError
+		//err = constants.HTTP_500_ERROR_MESSAGE("read image")
 		return
 	}
 
-	defer func(tempFile *os.File) {
-		err := tempFile.Close()
-		if err != nil {
-			return
-		}
-	}(tempFile)
-
-	buffer, err := io.ReadAll(input.Image.File)
+	// Resize and compress the image.
+	bufferResized, size, err := utils.ResizeImageDefault(buffer)
 	if err != nil {
+		errCode = http.StatusInternalServerError
+		//err = constants.HTTP_500_ERROR_MESSAGE("resize image")
 		return
 	}
 
-	_, err = tempFile.Write(buffer)
+	// Create the file
+	fileName, err := utils.SaveFile(bufferResized, constants.ASSET_UPLOADS_PATH+subDir)
 	if err != nil {
+		errCode = http.StatusInternalServerError
+		//err = constants.HTTP_500_ERROR_MESSAGE("save image")
 		return
 	}
-	return &data.ImageResponse{
-		Name: fmt.Sprint(input.Image.File),
+	return &data.UploadImageResponse{
+		Url:    fileName,
+		Width:  size.Width,
+		Height: size.Height,
 	}, 0, nil
 }
 
 // Update existing image
-func (service *Service) Update(ctx *context.Context, url string, data []byte) (result *data.ImageResponse, errCode int, err error) {
-
+func (service *Service) Update(
+	ctx *context.Context,
+	url string,
+	input *data.ImageData,
+) (result *data.UploadImageResponse, errCode int, err error) {
+	isDeleted, err := utils.DeleteFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
+	if isDeleted {
+		result, errCode, err = service.Create(ctx, input)
+		return
+	}
+	errCode = http.StatusNotFound
+	err = constants.HTTP_404_ERROR_MESSAGE("Resource")
 	return
 }
 
 // Delete image with matching id and return affected rows
-func (service *Service) Delete(ctx *context.Context, url string) (affectedRows int64, errCode int, err error) {
-
+func (service *Service) Delete(ctx *context.Context, url string) (result bool, errCode int, err error) {
+	result, err = utils.DeleteFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
+	if err != nil || !result {
+		errCode = http.StatusNotFound
+		err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+	}
 	return
 }
 
-// Get Return image with matching id
+// Get image with matching id
 func (service *Service) Get(ctx *context.Context, url string) (result []byte, errCode int, err error) {
-
+	result, err = utils.ReadFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
+	if err != nil || len(result) < 1 {
+		errCode = http.StatusNotFound
+		err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+	}
 	return
 }

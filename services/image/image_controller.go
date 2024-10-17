@@ -20,7 +20,7 @@ func (controller *Controller) Create(
 	input *struct {
 		RawBody huma.MultipartFormFiles[data.ImageData]
 	},
-) (result *data.ImageResponse, errCode int, err error) {
+) (result *data.UploadImageResponse, errCode int, err error) {
 	result, errCode, err = controller.Service.Create(ctx, input.RawBody.Data())
 	return
 }
@@ -31,7 +31,7 @@ func (controller *Controller) Update(
 		types.AssetUrl
 		RawBody huma.MultipartFormFiles[data.ImageData]
 	},
-) (result *data.ImageResponse, errCode int, err error) {
+) (result *data.UploadImageResponse, errCode int, err error) {
 
 	result, errCode, err = controller.Service.Update(ctx, input.AssetUrl.Url, nil)
 	return
@@ -42,7 +42,7 @@ func (controller *Controller) Delete(
 	input *struct {
 		types.AssetUrl
 	},
-) (result int64, errCode int, err error) {
+) (result bool, errCode int, err error) {
 	affectedRows, errCode, err := controller.Service.Delete(ctx, input.AssetUrl.Url)
 	if err != nil {
 		return
@@ -57,10 +57,6 @@ func (controller *Controller) Get(
 		types.AssetUrl
 	},
 ) (result []byte, errCode int, err error) {
-	storage, errCode, err := controller.Service.Get(ctx, input.AssetUrl.Url)
-	if err != nil {
-		return
-	}
-	result = storage
+	result, errCode, err = controller.Service.Get(ctx, input.AssetUrl.Url)
 	return
 }
