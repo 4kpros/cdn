@@ -33,7 +33,9 @@ func (service *Service) Create(
 	}
 
 	// Resize and compress the image.
-	bufferResized, size, err := utils.ResizeImage(buffer, option.Width, option.Height, option.Quality, option.Compression, option.Crop)
+	bufferResized, size, err := utils.ResizeImage(
+		buffer, option.Width, option.Height, option.Quality,
+	)
 	if err != nil {
 		errCode = http.StatusInternalServerError
 		err = constants.HTTP_500_ERROR_MESSAGE("resize image")
@@ -97,7 +99,7 @@ func (service *Service) Get(
 
 	// Resize and compress the image.
 	result, _, err = utils.ResizeImage(
-		buffer, option.Width, option.Height, option.Quality, option.Compression, option.Crop,
+		buffer, option.Width, option.Height, option.Quality,
 	)
 	if err != nil {
 		errCode = http.StatusInternalServerError
