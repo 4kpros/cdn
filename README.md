@@ -32,5 +32,6 @@ cd go-cdn/
 make docker-cdn
 ```
 API documentation (using OpenAPI v3.1) at: http://localhost:23100/api/v1/docs
-![Capture d'écran 2024-10-18 034540](https://github.com/user-attachments/assets/218e40cf-0e6a-4acc-8a05-f3293989c5ee)
+![DOC](https://github.com/user-attachments/assets/89afe1f7-a100-4a49-b492-c92f2717e8a1)
+
 
