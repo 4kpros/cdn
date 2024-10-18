@@ -21,14 +21,14 @@ Before diving in, ensure you have the following:
 
 ### 1. Clone the repository
 
-```go
+```
 git clone https://github.com/4kpros/cdn.git
 cd go-cdn/
 ```
 
 ### 2. Build and start the container
 
-```go
+```
 make docker-cdn
 ```
 API documentation (using OpenAPI v3.1) at: http://localhost:23100/api/v1/docs
