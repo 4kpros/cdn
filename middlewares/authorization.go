@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// Handles authentication for API requests.
+// AuthMiddleware Handles authentication for API requests.
 func AuthMiddleware(api huma.API) func(huma.Context, func(huma.Context)) {
 	var errMessage string
 	return func(ctx huma.Context, next func(huma.Context)) {

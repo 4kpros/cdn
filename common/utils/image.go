@@ -5,7 +5,7 @@ import (
 	"github.com/h2non/bimg"
 )
 
-const defaultImageSize = 1280
+const defaultImageSize = 1000
 
 func ResizeImage(inputBuffer []byte, width int, height int, quality int, compression int, crop bool) (outputBuffer []byte, outputSize bimg.ImageSize, err error) {
 	// Check for supported types
@@ -51,7 +51,7 @@ func ResizeImage(inputBuffer []byte, width int, height int, quality int, compres
 	// Fix quality
 	fixedQuality := quality
 	if fixedQuality <= 0 {
-		fixedQuality = 100
+		fixedQuality = bimg.Quality
 	}
 
 	// Fix compression
