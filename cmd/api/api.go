@@ -1,12 +1,11 @@
 package api
 
 import (
-	"fmt"
-
 	"cdn/common/constants"
 	"cdn/config"
 	"cdn/middlewares"
 	"cdn/services/image"
+	"fmt"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humagin"
@@ -71,6 +70,8 @@ func Start() {
 	)
 
 	// Register endpoints
+	// Serve static files as favicon
+	engine.Static("/static", constants.ASSET_APP_PATH)
 	// Register endpoint for docs with support for custom template
 	ginGroup.GET("/docs", func(ctx *gin.Context) {
 		ctx.Data(200, "text/html", []byte(*config.OpenAPITemplates.Scalar))
