@@ -19,7 +19,7 @@ const subDir = "/openapi"
 
 var OpenAPITemplates = &OpenAPITemplate{}
 
-// Loads OpenAPI templates from a specified location resources.
+// LoadOpenAPITemplates Loads OpenAPI templates from a specified location resources.
 func LoadOpenAPITemplates() error {
 	var err error
 	var errRead error

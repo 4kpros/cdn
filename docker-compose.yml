@@ -6,13 +6,10 @@ services:
       target: cdn
       dockerfile: ./Dockerfile
     restart: on-failure
-    environment:
-      APP_PORT: ${APP_PORT:-3100}
-      GIN_MODE: ${GIN_MODE:-debug} # debug, release
     volumes:
       - cdn-data:/app/assets
     ports:
-      - ${APP_PORT:-3100}:3100
+      - "23100:3100"
 
 volumes:
   cdn-data:
