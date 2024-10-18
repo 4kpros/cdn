@@ -25,6 +25,8 @@ cd go-cdn/
 ```
  - By default, the container uses `.env.example` as a sample environment file. You can directly update this file with your values. However, it would be better to integrate Vault to manage your secrets in your CI/CD pipeline. Or if you user Kubernetes.
 
+ - The entry point of the project is `cmd/` folder. In this folder the is the `main.go` file.
+
 ### 2. Build and start the container
 
 ```
