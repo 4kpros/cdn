@@ -17,14 +17,13 @@ Before diving in, ensure you have the following:
     
  - Docker: Simplifies containerized deployments.
 
- - Rename .env.example to ```app.env```
-
 ### 1. Clone the repository
 
 ```
 git clone https://github.com/4kpros/cdn.git
 cd go-cdn/
 ```
+ - By default, the container uses ` as a sample environment file. You can directly update this file with your values. However, it would be better to integrate Vault to manage your secrets in your CI/CD pipeline. Or if you user Kubernetes.
 
 ### 2. Build and start the container
 
