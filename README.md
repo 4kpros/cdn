@@ -1,77 +1,35 @@
-# Simple and well-structured API for multiple projects
+# Customizable CDN with Go and Docker
 
-This repository contains a simple API written in Go, designed to be reusable and easily integrated into multiple projects. The API is built with a focus on performance, scalability, and maintainability. 
-
-It provides a clean and consistent interface for accessing and managing data, making it an ideal choice for a variety of applications.
+- A flexible CDN built with Go, offering granular control over content delivery through configurable filters. Dockerized for easy deployment and scaling.
 
 
-# Key features
+## Built for Efficiency:
 
-**- Good performance:** The API is designed to handle a high volume of requests with low latency.
+ - Performance: Handles high request volumes with minimal latency, ensuring a smooth user experience.
+  
+ - Scalability: Adapts seamlessly to growing workloads, allowing you to scale your applications effectively.
 
-**- Scalable:** The API can be easily scaled to accommodate increasing workloads.
+# Getting Started:
 
-**- Well-structured:** The API is well-documented and easy to use, with a consistent and intuitive interface.
+Before diving in, ensure you have the following:
 
-**- Reusable:** The API can be easily integrated into multiple projects, reducing development time and effort.
+ - Make: Streamlines build processes.
+    
+ - Docker: Simplifies containerized deployments.
 
-# To get started with the API, follow these steps:
+ - Rename .env.example to ```app.env```
 
-### 1. Requirements
-
-  - Make installed for shortcuts
-
-  - Docker installed
-
-  - Rename .env.example to ```app.env```
-
-  Others information such configurations are on ```app.env```
-
-### 2. Clone the repository
+### 1. Clone the repository
 
 ```go
-git clone https://github.com/your-username/go-api.git
+git clone https://github.com/4kpros/cdn.git
+cd go-cdn/
 ```
+
+### 2. Build and start the container
 
 ```go
-cd go-api/
+make docker-cdn
 ```
+API documentation (using OpenAPI v3.1) at: http://localhost:23100/api/v1/docs
 
-The entry point of the project is `cmd/` folder. In this folder the is a `main.go` file.
-
-### 3. Install dependencies
-
-```go
-make install
-```
-
-### 4. Run the API
-
-```go
-make build
-```
-
-```go
-make run
-```
-
-API docs with openAPI v3.1(latest) is on 
-```go
-/api/v1/docs
-```
-
-If you want to scan vulnerabilities(security issues)
-```go
-make scan
-```
-
-# Features
-
-- [x] Images
-
-
-# Contributing
-
-We welcome contributions to this project. If you have any ideas or improvements, please feel free to open an issue or pull request.
-
-We believe that this API can be a valuable tool for developers who need to build high-performance, scalable, and maintainable applications. We encourage you to try it out and let us know what you think.

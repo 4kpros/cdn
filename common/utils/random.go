@@ -6,11 +6,9 @@ import (
 	"time"
 )
 
-const letterAlphaNumericSymbol = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-=_+"
 const letterAlphaNumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-const letterNumeric = "1234567890"
 
-var src = rand.NewSource(time.Now().UnixNano())
+var src = rand.NewSource(time.Now().Unix())
 
 const (
 	letterIdxBits = 6                    // 6 bits to represent a letter index
@@ -18,7 +16,8 @@ const (
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
 
-// Returns the generated alpha numeric with the specified length.
+// GenerateRandomAlphaNumeric Returns a generated alphanumeric
+// string with the specified length.
 func GenerateRandomAlphaNumeric(length int) string {
 	safeLength := length
 	if safeLength <= 0 {

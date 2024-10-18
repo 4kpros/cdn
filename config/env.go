@@ -6,10 +6,12 @@ import (
 
 type Environment struct {
 	// Application config
-	AppPort int    `mapstructure:"APP_PORT"`
-	AppName string `mapstructure:"APP_NAME"`
+	AppPort  int    `mapstructure:"APP_PORT"`
+	AppName  string `mapstructure:"APP_NAME"`
+	Hostname string `mapstructure:"HOST_NAME"`
 
 	// API config
+	ApiKey       string `mapstructure:"API_KEY"`
 	ApiGroup     string `mapstructure:"API_GROUP"`
 	GinMode      string `mapstructure:"GIN_MODE"`
 	AllowedHosts string `mapstructure:"ALLOWED_HOSTS"`
@@ -17,7 +19,7 @@ type Environment struct {
 
 var Env = &Environment{}
 
-// Loads environment variables.
+// LoadEnv Loads environment variables.
 func LoadEnv() error {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("app")

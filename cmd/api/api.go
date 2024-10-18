@@ -52,12 +52,22 @@ func Start() {
 	humaConfig.Servers = []*huma.Server{
 		{URL: config.Env.ApiGroup},
 	}
+	humaConfig.Components.SecuritySchemes = map[string]*huma.SecurityScheme{
+		constants.SECURITY_AUTH_NAME: {
+			Type:        "apiKey",
+			Name:        "X-API-Key",
+			In:          "header",
+			Scheme:      "token",
+			Description: "Api key used to perform create, update and delete actions.",
+		},
+	}
 	humaConfig.Info.Description = constants.OPEN_API_DESCRIPTION
 	humaApi := humagin.NewWithGroup(engine, ginGroup, humaConfig)
 	// Register middlewares
 	humaApi.UseMiddleware(
 		middlewares.HeadersMiddleware(humaApi),
 		middlewares.CorsMiddleware(humaApi),
+		middlewares.AuthMiddleware(humaApi),
 	)
 
 	// Register endpoints
