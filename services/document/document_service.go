@@ -6,6 +6,7 @@ import (
 	"cdn/config"
 	"cdn/services/document/data"
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -13,6 +14,29 @@ type Service struct {
 }
 
 const subDir = "/documents"
+
+var documentTypes = []string{
+	"text/plain",
+	"application/pdf",
+
+	"application/msword",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+
+	"text/csv",
+	"application/vnd.ms-excel",
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+
+	"application/vnd.ms-powerpoint",
+	"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+	"application/vnd.openxmlformats-officedocument.presentationml.template",
+	"application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+
+	"application/vnd.oasis.opendocument.presentation", // .odp
+	"application/vnd.oasis.opendocument.spreadsheet",  // .ods
+	"application/vnd.oasis.opendocument.text",         // .odt
+}
 
 func NewService() *Service {
 	return &Service{}
@@ -30,6 +54,20 @@ func (service *Service) Create(
 		errCode = http.StatusInternalServerError
 		err = constants.HTTP_500_ERROR_MESSAGE("read document")
 		return
+	}
+
+	// Detect file type
+	fileType := http.DetectContentType(buffer)
+	invalidInput := true
+	for _, inputType := range documentTypes {
+		if fileType == inputType {
+			invalidInput = false
+			break
+		}
+	}
+	if invalidInput {
+		errCode = http.StatusBadRequest
+		err = fmt.Errorf("%s", fmt.Sprintf("Unsupported file type! Please enter valid information."))
 	}
 
 	// Create the file
