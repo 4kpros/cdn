@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"slices"
 )
 
 type Service struct {
@@ -18,12 +19,12 @@ const subDir = "/documents"
 var documentTypes = []string{
 	"text/plain",
 	"application/pdf",
+	"text/csv",
 
 	"application/msword",
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.template",
 
-	"text/csv",
 	"application/vnd.ms-excel",
 	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 	"application/vnd.openxmlformats-officedocument.spreadsheetml.template",
@@ -58,16 +59,10 @@ func (service *Service) Create(
 
 	// Check file type
 	fileType := http.DetectContentType(buffer)
-	invalidInput := true
-	for _, inputType := range documentTypes {
-		if fileType == inputType {
-			invalidInput = false
-			break
-		}
-	}
-	if invalidInput {
+	if !slices.Contains(documentTypes, fileType) {
 		errCode = http.StatusBadRequest
-		err = fmt.Errorf("%s", fmt.Sprintf("Unsupported file type! Please enter valid information."))
+		err = fmt.Errorf("%s", fmt.Sprintf("Unsupported file type %s! Please enter valid information.", fileType))
+		return
 	}
 
 	// Create the file
