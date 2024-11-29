@@ -25,7 +25,7 @@ scan:
 # ------------------ Docker commands ------------------
 .PHONY: docker-cdn
 docker-cdn:
-	@docker compose --env-file app.env up --build --no-deps -d cdn
+	@docker compose up --build --no-deps -d cdn
 
 .PHONY: docker-ghcr-login
 docker-ghcr-login:
