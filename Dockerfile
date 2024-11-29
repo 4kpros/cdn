@@ -10,11 +10,13 @@ RUN apk update &&\
     gcc g++ vips vips-dev vips-poppler pkgconf \
     poppler-dev musl-dev libc6-compat
 
-# Copy the project files
-COPY . .
-
 # Install dependencies and build the app
+COPY ./go.mod .
+COPY ./go.sum .
 RUN go mod download
+
+# Build the app
+COPY . .
 RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o ./.build/main ./cmd/main.go
 
 
