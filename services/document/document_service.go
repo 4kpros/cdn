@@ -56,7 +56,7 @@ func (service *Service) Create(
 		return
 	}
 
-	// Detect file type
+	// Check file type
 	fileType := http.DetectContentType(buffer)
 	invalidInput := true
 	for _, inputType := range documentTypes {
