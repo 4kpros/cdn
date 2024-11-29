@@ -4,6 +4,7 @@ import (
 	"cdn/common/constants"
 	"cdn/config"
 	"cdn/middlewares"
+	"cdn/services/document"
 	"cdn/services/image"
 	"fmt"
 	"net/http"
@@ -15,7 +16,8 @@ import (
 )
 
 type APIControllers struct {
-	ImageController *image.Controller
+	ImageController    *image.Controller
+	DocumentController *document.Controller
 }
 
 var Controllers = &APIControllers{}
@@ -23,6 +25,7 @@ var Controllers = &APIControllers{}
 // Register all API endpoints
 func registerEndpoints(humaApi *huma.API) {
 	image.RegisterEndpoints(humaApi, Controllers.ImageController)
+	document.RegisterEndpoints(humaApi, Controllers.DocumentController)
 }
 
 // Set up and start the API: set up API documentation,
