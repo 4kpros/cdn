@@ -9,7 +9,7 @@ services:
     volumes:
       - cdn-data:/app/assets
     ports:
-      - "23100:3100"
+      - "13100:3100"
 
 volumes:
   cdn-data:
