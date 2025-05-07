@@ -49,12 +49,33 @@ func (service *Service) Create(
 		err = constants.HTTP_500_ERROR_MESSAGE("save image")
 		return
 	}
-	return &data.UploadImageResponse{
+	result = &data.UploadImageResponse{
 		Url:    "https://" + config.Env.Hostname + config.Env.ApiGroup + "/images/" + fileName,
 		Path:   fileName,
 		Width:  size.Width,
 		Height: size.Height,
-	}, 0, nil
+	}
+	return
+}
+
+// Create new images
+func (service *Service) CreateMultiple(
+	ctx *context.Context,
+	option *data.ImageQuery,
+	input *data.MultipleImageData,
+) (result *data.UploadMultipleImageResponse, errCode int, err error) {
+	if !(input != nil && input.Images != nil && len(input.Images) > 0) {
+		return
+	}
+	images := make([]data.UploadImageResponse, len(input.Images))
+	for i := 0; i < len(input.Images); i++ {
+		tmpImg, _, _ := service.Create(ctx, option, &input.Images[i])
+		if tmpImg != nil {
+			images[i] = *tmpImg
+		}
+	}
+	result.UploadImageResponse = images
+	return
 }
 
 // Update existing image
@@ -70,7 +91,7 @@ func (service *Service) Update(
 		return
 	}
 	errCode = http.StatusNotFound
-	err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+	err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	return
 }
 
@@ -79,7 +100,7 @@ func (service *Service) Delete(ctx *context.Context, url string) (result bool, e
 	result, err = utils.DeleteFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
 	if err != nil || !result {
 		errCode = http.StatusNotFound
-		err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
 	return
 }
@@ -94,7 +115,7 @@ func (service *Service) Get(
 	buffer, err := utils.ReadFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
 	if err != nil || len(buffer) < 1 {
 		errCode = http.StatusNotFound
-		err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
 
 	// Resize and compress the image.

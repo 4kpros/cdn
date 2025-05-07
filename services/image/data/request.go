@@ -11,3 +11,6 @@ type ImageQuery struct {
 type ImageData struct {
 	Image huma.FormFile `form:"image" required:"true" doc:"Select you image"`
 }
+type MultipleImageData struct {
+	Images []ImageData `form:"images" required:"true" doc:"Select you images"`
+}

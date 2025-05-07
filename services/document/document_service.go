@@ -72,10 +72,11 @@ func (service *Service) Create(
 		err = constants.HTTP_500_ERROR_MESSAGE("save document")
 		return
 	}
-	return &data.UploadDocumentResponse{
+	result = &data.UploadDocumentResponse{
 		Url:  "https://" + config.Env.Hostname + config.Env.ApiGroup + "/documents/" + fileName,
 		Path: fileName,
-	}, 0, nil
+	}
+	return
 }
 
 // Update existing document
@@ -91,7 +92,7 @@ func (service *Service) Update(
 		return
 	}
 	errCode = http.StatusNotFound
-	err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+	err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	return
 }
 
@@ -100,7 +101,7 @@ func (service *Service) Delete(ctx *context.Context, url string) (result bool, e
 	result, err = utils.DeleteFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
 	if err != nil || !result {
 		errCode = http.StatusNotFound
-		err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
 	return
 }
@@ -115,7 +116,7 @@ func (service *Service) Get(
 	buffer, err := utils.ReadFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
 	if err != nil || len(buffer) < 1 {
 		errCode = http.StatusNotFound
-		err = constants.HTTP_404_ERROR_MESSAGE("Resource")
+		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
 
 	if err != nil {
