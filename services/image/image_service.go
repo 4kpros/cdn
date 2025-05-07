@@ -50,7 +50,7 @@ func (service *Service) Create(
 		return
 	}
 	result = &data.UploadImageResponse{
-		Url:    "https://" + config.Env.Hostname + config.Env.ApiGroup + "/images/" + fileName,
+		Url:    config.Env.Hostname + config.Env.ApiGroup + "/images/" + fileName,
 		Path:   fileName,
 		Width:  size.Width,
 		Height: size.Height,

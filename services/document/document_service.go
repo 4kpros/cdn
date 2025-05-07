@@ -73,7 +73,7 @@ func (service *Service) Create(
 		return
 	}
 	result = &data.UploadDocumentResponse{
-		Url:  "https://" + config.Env.Hostname + config.Env.ApiGroup + "/documents/" + fileName,
+		Url:  config.Env.Hostname + config.Env.ApiGroup + "/documents/" + fileName,
 		Path: fileName,
 	}
 	return
