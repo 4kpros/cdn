@@ -6,5 +6,5 @@ type DocumentQuery struct {
 }
 
 type DocumentData struct {
-	Document huma.FormFile `form:"document" required:"true" doc:"Supported files type: txt, pdf, doc, docx, csv, xls, xlsx, ppt, pptx, odp, ods, odt"`
+	Document huma.FormFile `form:"file" required:"true" doc:"Supported files type: txt, pdf, doc, docx, csv, xls, xlsx, ppt, pptx, odp, ods, odt"`
 }

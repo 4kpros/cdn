@@ -4,6 +4,7 @@ import (
 	"cdn/common/types"
 	"cdn/services/image/data"
 	"context"
+
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -23,6 +24,17 @@ func (controller *Controller) Create(
 	},
 ) (result *data.UploadImageResponse, errCode int, err error) {
 	result, errCode, err = controller.Service.Create(ctx, &input.ImageQuery, input.RawBody.Data())
+	return
+}
+
+func (controller *Controller) CreateMultiple(
+	ctx *context.Context,
+	input *struct {
+		data.ImageQuery
+		RawBody huma.MultipartFormFiles[data.MultipleImageData]
+	},
+) (result *data.UploadMultipleImageResponse, errCode int, err error) {
+	result, errCode, err = controller.Service.CreateMultiple(ctx, &input.ImageQuery, input.RawBody.Data())
 	return
 }
 

@@ -53,6 +53,42 @@ func RegisterEndpoints(
 		},
 	)
 
+	// Upload multiple images
+	huma.Register(
+		*humaApi,
+		huma.Operation{
+			OperationID: "post-images",
+			Summary:     "Upload images",
+			Description: "Upload mupltiple images.",
+			Method:      http.MethodPost,
+			Path:        fmt.Sprintf("%s/multiple", endpointConfig.Group),
+			Tags:        endpointConfig.Tag,
+			Security: []map[string][]string{
+				{constants.SECURITY_AUTH_NAME: {}}, // Used to require authentication
+			},
+			MaxBodyBytes:  (1024 * 1000) * 100, // (1 KiB * 1000) * 5 = 5MiB
+			DefaultStatus: http.StatusOK,
+			Errors:        []int{http.StatusInternalServerError, http.StatusBadRequest, http.StatusUnauthorized, http.StatusForbidden},
+		},
+		func(
+			ctx context.Context,
+			input *struct {
+				data.ImageQuery
+				RawBody huma.MultipartFormFiles[data.MultipleImageData]
+			},
+		) (*struct {
+			Body *data.UploadMultipleImageResponse
+		}, error) {
+			result, errCode, err := controller.CreateMultiple(&ctx, input)
+			if err != nil {
+				return nil, huma.NewError(errCode, err.Error())
+			}
+			return &struct {
+				Body *data.UploadMultipleImageResponse
+			}{Body: result}, nil
+		},
+	)
+
 	// Update image
 	huma.Register(
 		*humaApi,
