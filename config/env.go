@@ -6,7 +6,7 @@ import (
 
 type Environment struct {
 	// Application config
-	AppEnv   int    `mapstructure:"APP_ENV"`
+	AppEnv   string `mapstructure:"APP_ENV"`
 	AppPort  int    `mapstructure:"APP_PORT"`
 	Hostname string `mapstructure:"HOST_NAME"`
 
