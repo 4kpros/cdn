@@ -10,7 +10,7 @@ RUN apk update &&\
     gcc g++ vips vips-dev vips-poppler pkgconf \
     poppler-dev musl-dev libc6-compat
 
-# Install dependencies and build the app
+# Install dependencies
 COPY ./go.mod .
 COPY ./go.sum .
 RUN go mod download

@@ -1,38 +1,67 @@
-# Customizable CDN with Go and Docker
+# Overview
 
-- A flexible CDN built with Go, offering granular control over content delivery through configurable filters. Dockerized for easy deployment and scaling.
+This project leverages Docker and Make to streamline development and deployment.
+
+# Prerequisites
+
+- Docker installed and running
+
+- Make installed
+
+- A GitHub account with a personal access token with the necessary permissions
+
+# Usage
+
+1. Build and run docker image
+
+    To build and run locally using Docker, run the following command:
+    ```
+        make docker-cdn
+    ```
+    This will build and start the Docker container.
+
+2. Logging into GitHub Container Registry
+
+    Before pushing or pulling images, you need to log in to the GitHub Container Registry:
+    ```
+        make docker-ghcr-login
+    ```
+    You will be prompted to enter your GitHub personal access token.
+
+3. Pushing Image to GitHub Container Registry
+
+    To push a new image to the GitHub Container Registry, run:
+    ```
+        make docker-ghcr-push
+    ```
+    You will be prompted to enter the new version tag.
+
+4. Pulling Image from GitHub Container Registry
+
+    To pull a specific image from the GitHub Container Registry, run:
+    ```
+        make docker-ghcr-pull
+    ```
+    You will be prompted to enter the desired image tag.
 
 
-## Built for Efficiency:
+# Update GitHub Action Secrets for continuous integration(build and package)
 
- - Performance: Handles high request volumes with minimal latency, ensuring a smooth user experience.
-  
- - Scalability: Adapts seamlessly to growing workloads, allowing you to scale your applications effectively.
+Go to this link: [GitHub Action Secrets](https://github.com/EMENEC-FINANCE/cdn/settings/secrets/actions)
 
-# Getting Started:
+- ------------- On your GitHub Action Secrets page -------------
+    - Set Secrets `GHCR_USERNAME` `GHCR_PASSWORD` with value your GitHub credentials. `GHCR_PASSWORD` is your personal access token with `write package` permission enabled
+        
 
-Before diving in, ensure you have the following:
+# Makefile Targets
 
- - Make: Streamlines build processes.
-    
- - Docker: Simplifies containerized deployments.
+- `docker-cdn`: Builds and starts the Docker container for local development.
 
-### 1. Clone the repository
+- `docker-ghcr-push`: Builds the Docker image and pushes it to the GitHub Container Registry.
 
-```
-git clone https://github.com/4kpros/cdn.git
-cd go-cdn/
-```
- - By default, the container uses `.env.example` as a sample environment file. You can directly update this file with your values. However, it would be better to integrate Vault to manage your secrets in your CI/CD pipeline. Or if you user Kubernetes.
-
- - The entry point of the project is `cmd/` folder. In this folder the is the `main.go` file.
-
-### 2. Build and start the container
-
-```
-make docker-cdn
-```
-API documentation (using OpenAPI v3.1) at: http://localhost:23100/api/v1/docs
-![DOC](https://github.com/user-attachments/assets/89afe1f7-a100-4a49-b492-c92f2717e8a1)
+- `docker-ghcr-pull`: Pulls a specific image from the GitHub Container Registry.
 
 
+# Additional Notes
+
+By following these steps and customizing the Makefile to fit your specific needs, you can effectively manage your project using Docker and Make.
