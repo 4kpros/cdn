@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
+	"go.uber.org/zap"
 )
 
 // AuthMiddleware Handles authentication for API requests.
@@ -41,6 +42,14 @@ func AuthMiddleware(api huma.API) func(huma.Context, func(huma.Context)) {
 			return
 		}
 
+		helpers.Logger.Warn(
+			"Request api key",
+			zap.String("Value: ", apiKey),
+		)
+		helpers.Logger.Warn(
+			"CDN api key",
+			zap.String("Value: ", config.Env.ApiKey),
+		)
 		tempErr := constants.HTTP_401_INVALID_TOKEN_ERROR_MESSAGE()
 		_ = huma.WriteErr(api, ctx, http.StatusUnauthorized, tempErr.Error(), tempErr, fmt.Errorf("Request api key = %s", apiKey), fmt.Errorf("CDN apî key = %s", config.Env.ApiKey))
 	}
