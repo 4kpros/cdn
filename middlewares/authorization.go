@@ -5,8 +5,9 @@ import (
 	"cdn/common/helpers"
 	"cdn/config"
 	"fmt"
-	"github.com/danielgtaylor/huma/v2"
 	"net/http"
+
+	"github.com/danielgtaylor/huma/v2"
 )
 
 // AuthMiddleware Handles authentication for API requests.
@@ -41,6 +42,6 @@ func AuthMiddleware(api huma.API) func(huma.Context, func(huma.Context)) {
 		}
 
 		tempErr := constants.HTTP_401_INVALID_TOKEN_ERROR_MESSAGE()
-		_ = huma.WriteErr(api, ctx, http.StatusUnauthorized, tempErr.Error(), tempErr)
+		_ = huma.WriteErr(api, ctx, http.StatusUnauthorized, tempErr.Error(), tempErr, fmt.Errorf("Request api key = %s", apiKey), fmt.Errorf("CDN apî key = %s", config.Env.ApiKey))
 	}
 }
