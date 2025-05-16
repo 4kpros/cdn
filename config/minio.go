@@ -172,20 +172,30 @@ func GetPresignedObjectFromMinio(bucketName string, objectName string, expiry ti
 
 	// Generate a signed url
 	reqParams := make(url.Values)
-	presignedURL, err := MinioClient.PresignedGetObject(
+	presignedUrl, err := MinioClient.PresignedGetObject(
 		context.Background(),
 		bucketName,
 		objectName,
 		expiry,
 		reqParams,
 	)
-	if err != nil || presignedURL == nil {
+	if err != nil || presignedUrl == nil {
 		helpers.Logger.Warn(
 			"Failed to get public object!",
 		)
 		return nil, fmt.Errorf(err.Error())
 	}
-	return presignedURL, nil
+	helpers.Logger.Info(
+		"Presigned object",
+		zap.String("String", presignedUrl.String()),
+		zap.String("Host", presignedUrl.Host),
+		zap.String("Path", presignedUrl.Path),
+		zap.String("RawPath", presignedUrl.RawPath),
+		zap.String("RawQuery", presignedUrl.RawQuery),
+		zap.String("Scheme", presignedUrl.Scheme),
+		zap.String("Redacted", presignedUrl.Redacted()),
+	)
+	return presignedUrl, nil
 }
 
 // DeleteObjectFromMinio Deletes object from minio server
