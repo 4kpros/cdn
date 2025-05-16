@@ -2,6 +2,7 @@ package document
 
 import (
 	"cdn/common/constants"
+	"cdn/middlewares"
 	"context"
 	"fmt"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"cdn/services/document/data"
 
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/gin-gonic/gin"
 )
 
 func RegisterEndpoints(
@@ -34,7 +36,7 @@ func RegisterEndpoints(
 			Security: []map[string][]string{
 				{constants.SECURITY_AUTH_NAME: {}}, // Used to require authentication
 			},
-			MaxBodyBytes:  (1024 * 1000) * 100, // (1 KiB * 1000) * 5 = 5MiB
+			MaxBodyBytes:  (1024 * 1000) * 10, // (1 KiB * 1000) * 10 = 10MiB
 			DefaultStatus: http.StatusOK,
 			Errors:        []int{http.StatusInternalServerError, http.StatusBadRequest, http.StatusUnauthorized, http.StatusForbidden},
 		},
@@ -61,19 +63,19 @@ func RegisterEndpoints(
 			Summary:     "Update document",
 			Description: "Update existing document.",
 			Method:      http.MethodPut,
-			Path:        fmt.Sprintf("%s/{url}", endpointConfig.Group),
+			Path:        fmt.Sprintf("%s/{id}", endpointConfig.Group),
 			Tags:        endpointConfig.Tag,
 			Security: []map[string][]string{
 				{constants.SECURITY_AUTH_NAME: {}}, // Used to require authentication
 			},
-			MaxBodyBytes:  (1024 * 1000) * 100, // (1 KiB * 1000) * 5 = 5MiB
+			MaxBodyBytes:  (1024 * 1000) * 10, // (1 KiB * 1000) * 10 = 10MiB
 			DefaultStatus: http.StatusOK,
 			Errors:        []int{http.StatusInternalServerError, http.StatusBadRequest, http.StatusUnauthorized, http.StatusForbidden, http.StatusNotFound},
 		},
 		func(
 			ctx context.Context,
 			input *struct {
-				types.AssetUrl
+				types.FilePath
 				data.DocumentQuery
 				RawBody huma.MultipartFormFiles[data.DocumentData]
 			},
@@ -94,7 +96,7 @@ func RegisterEndpoints(
 			Summary:     "Delete document",
 			Description: "Delete existing document.",
 			Method:      http.MethodDelete,
-			Path:        fmt.Sprintf("%s/{url}", endpointConfig.Group),
+			Path:        fmt.Sprintf("%s/{id}", endpointConfig.Group),
 			Tags:        endpointConfig.Tag,
 			Security: []map[string][]string{
 				{constants.SECURITY_AUTH_NAME: {}}, // Used to require authentication
@@ -106,7 +108,7 @@ func RegisterEndpoints(
 		func(
 			ctx context.Context,
 			input *struct {
-				types.AssetUrl
+				types.FilePath
 			},
 		) (*struct{ Body *types.DeletedResponse }, error) {
 			result, errCode, err := controller.Delete(&ctx, input)
@@ -125,7 +127,7 @@ func RegisterEndpoints(
 			Summary:       "Get document",
 			Description:   "Return existing document data",
 			Method:        http.MethodGet,
-			Path:          fmt.Sprintf("%s/{url}", endpointConfig.Group),
+			Path:          fmt.Sprintf("%s/{id}", endpointConfig.Group),
 			Tags:          endpointConfig.Tag,
 			MaxBodyBytes:  1024, // 1 KiB
 			DefaultStatus: http.StatusOK,
@@ -134,7 +136,7 @@ func RegisterEndpoints(
 		func(
 			ctx context.Context,
 			input *struct {
-				types.AssetUrl
+				types.FilePath
 				data.DocumentQuery
 			},
 		) (
@@ -142,31 +144,15 @@ func RegisterEndpoints(
 			error,
 		) {
 			result, errCode, err := controller.Get(&ctx, input)
-			return &huma.StreamResponse{
-				Body: func(ctx huma.Context) {
-					// Add response headers
-					ctx.SetHeader("Content-Type", "document/webp")
-					ctx.SetHeader("Content-Length", fmt.Sprint(len(result)))
+			if err != nil || len(result) < 1 {
+				return nil, huma.NewError(errCode, err.Error())
+			}
 
-					// Check errors
-					if err != nil {
-						ctx.SetStatus(errCode)
-						return
-					}
-					if len(result) < 1 {
-						ctx.SetStatus(http.StatusNotFound)
-						return
-					}
-
-					// Write some data to the stream.
-					writer := ctx.BodyWriter()
-					_, err = writer.Write(result)
-					if err != nil {
-						ctx.SetStatus(http.StatusNoContent)
-						return
-					}
-				},
-			}, nil
+			ginCtx := ctx.Value(middlewares.GIN_CONTEXT_KEY).(*gin.Context)
+			if ginCtx != nil {
+				ginCtx.Redirect(http.StatusTemporaryRedirect, result)
+			}
+			return nil, nil
 		},
 	)
 }

@@ -1,5 +1,5 @@
 package types
 
-type AssetUrl struct {
-	Url string `json:"url" path:"url" required:"true" minLength:"3" doc:"Asset url" example:""`
+type FilePath struct {
+	Path string `json:"id" path:"id" required:"true" minLength:"3" doc:"Path" example:""`
 }

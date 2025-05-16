@@ -27,47 +27,36 @@ func (controller *Controller) Create(
 	return
 }
 
-func (controller *Controller) CreateMultiple(
-	ctx *context.Context,
-	input *struct {
-		data.ImageQuery
-		RawBody huma.MultipartFormFiles[data.MultipleImageData]
-	},
-) (result *data.UploadMultipleImageResponse, errCode int, err error) {
-	result, errCode, err = controller.Service.CreateMultiple(ctx, &input.ImageQuery, input.RawBody.Data())
-	return
-}
-
 func (controller *Controller) Update(
 	ctx *context.Context,
 	input *struct {
-		types.AssetUrl
+		types.FilePath
 		data.ImageQuery
 		RawBody huma.MultipartFormFiles[data.ImageData]
 	},
 ) (result *data.UploadImageResponse, errCode int, err error) {
 
-	result, errCode, err = controller.Service.Update(ctx, input.AssetUrl.Url, &input.ImageQuery, input.RawBody.Data())
+	result, errCode, err = controller.Service.Update(ctx, input.FilePath.Path, &input.ImageQuery, input.RawBody.Data())
 	return
 }
 
 func (controller *Controller) Delete(
 	ctx *context.Context,
 	input *struct {
-		types.AssetUrl
+		types.FilePath
 	},
 ) (result bool, errCode int, err error) {
-	result, errCode, err = controller.Service.Delete(ctx, input.AssetUrl.Url)
+	result, errCode, err = controller.Service.Delete(ctx, input.FilePath.Path)
 	return
 }
 
 func (controller *Controller) Get(
 	ctx *context.Context,
 	input *struct {
-		types.AssetUrl
+		types.FilePath
 		data.ImageQuery
 	},
-) (result []byte, errCode int, err error) {
-	result, errCode, err = controller.Service.Get(ctx, input.AssetUrl.Url, &input.ImageQuery)
+) (result string, errCode int, err error) {
+	result, errCode, err = controller.Service.Get(ctx, input.FilePath.Path, input.ImageQuery)
 	return
 }

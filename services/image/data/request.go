@@ -9,8 +9,5 @@ type ImageQuery struct {
 }
 
 type ImageData struct {
-	Image huma.FormFile `form:"file" required:"true" doc:"Select you image"`
-}
-type MultipleImageData struct {
-	Images []ImageData `form:"files" required:"true" doc:"Select you images"`
+	Image huma.FormFile `form:"file" required:"true" contentType:"application/octet-stream" doc:"Select you image"`
 }

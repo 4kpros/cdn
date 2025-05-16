@@ -43,6 +43,30 @@ func init() {
 		helpers.Logger.Info("Env loaded!")
 	}
 
+	// Connect minio env
+	errMinio := config.ConnectMinio()
+	if errMinio != nil {
+		errInit = errMinio
+		helpers.Logger.Error(
+			"Failed to connect to minio server!",
+			zap.String("Error", errEnv.Error()),
+		)
+	} else {
+		helpers.Logger.Info("Connected to minio!")
+	}
+
+	// Setup otter cache
+	errOtter := config.SetupOtterCache()
+	if errOtter != nil {
+		errInit = errOtter
+		helpers.Logger.Error(
+			"Failed to initialize otter cache!",
+			zap.String("Error", errEnv.Error()),
+		)
+	} else {
+		helpers.Logger.Info("Otter cache initialized!")
+	}
+
 	// Load OpenAPI templates
 	errOpenAPITemplates := config.LoadOpenAPITemplates()
 	if errOpenAPITemplates != nil {
