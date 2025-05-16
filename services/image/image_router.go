@@ -144,8 +144,11 @@ func RegisterEndpoints(
 			error,
 		) {
 			result, errCode, err := controller.Get(&ctx, input)
-			if err != nil || len(result) < 1 {
+			if err != nil {
 				return nil, huma.NewError(errCode, err.Error())
+			}
+			if len(result) < 1 {
+				return nil, huma.NewError(http.StatusNotFound, "Invalid url!")
 			}
 
 			ginCtx := ctx.Value(middlewares.GIN_CONTEXT_KEY).(*gin.Context)
