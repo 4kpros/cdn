@@ -12,7 +12,7 @@ var OtterCache otter.CacheWithVariableTTL[string, string]
 // Setup otter cache.
 func SetupOtterCache() error {
 	var err error
-	OtterCache, err = otter.MustBuilder[string, string](1000000).
+	OtterCache, err = otter.MustBuilder[string, string](10000).
 		CollectStats().
 		Cost(func(key string, value string) uint32 {
 			return 1
