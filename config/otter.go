@@ -19,7 +19,7 @@ func SetupOtterCache() error {
 		}).
 		WithVariableTTL().
 		Build()
-	if err != nil || MinioClient == nil {
+	if err != nil {
 		helpers.Logger.Warn(
 			"Failed to initialize otter cache!",
 			zap.String("Error: ", err.Error()),
