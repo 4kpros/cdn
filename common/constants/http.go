@@ -17,3 +17,7 @@ var HTTP_401_INVALID_PERMISSION_ERROR_MESSAGE = func() error {
 var HTTP_404_ERROR_MESSAGE = func(message string) error {
 	return fmt.Errorf("%s", fmt.Sprintf("%s not found! Please enter valid information.", message))
 }
+
+var HTTP_400_ERROR_MESSAGE = func(message string) error {
+	return fmt.Errorf("%s", fmt.Sprintf("%s! Please enter valid information.", message))
+}

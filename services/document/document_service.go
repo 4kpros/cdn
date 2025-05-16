@@ -2,42 +2,19 @@ package document
 
 import (
 	"cdn/common/constants"
-	"cdn/common/utils"
+	"cdn/common/helpers"
 	"cdn/config"
 	"cdn/services/document/data"
 	"context"
 	"fmt"
 	"net/http"
-	"slices"
+	"time"
 )
 
 type Service struct {
 }
 
 const subDir = "/documents"
-
-var documentTypes = []string{
-	"text/plain",
-	"application/pdf",
-	"text/csv",
-
-	"application/msword",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-
-	"application/vnd.ms-excel",
-	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-	"application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-
-	"application/vnd.ms-powerpoint",
-	"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-	"application/vnd.openxmlformats-officedocument.presentationml.template",
-	"application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-
-	"application/vnd.oasis.opendocument.presentation", // .odp
-	"application/vnd.oasis.opendocument.spreadsheet",  // .ods
-	"application/vnd.oasis.opendocument.text",         // .odt
-}
 
 func NewService() *Service {
 	return &Service{}
@@ -47,31 +24,20 @@ func NewService() *Service {
 func (service *Service) Create(
 	ctx *context.Context,
 	option *data.DocumentQuery,
-	input *data.DocumentData,
+	documentData *data.DocumentData,
 ) (result *data.UploadDocumentResponse, errCode int, err error) {
-	// Read buffer
-	buffer, err := utils.ReadMultipartFile(input.Document.File)
-	if err != nil {
-		errCode = http.StatusInternalServerError
-		err = constants.HTTP_500_ERROR_MESSAGE("read document")
-		return
-	}
+	// Encode file name
+	initialFileName := documentData.Document.Filename
+	fileName := fmt.Sprintf("%d_%s", time.Now().Unix(), initialFileName)
 
-	// Check file type
-	fileType := http.DetectContentType(buffer)
-	if !slices.Contains(documentTypes, fileType) {
-		errCode = http.StatusBadRequest
-		err = fmt.Errorf("%s", fmt.Sprintf("Unsupported file type %s! Please enter valid information.", fileType))
-		return
-	}
-
-	// Create the file
-	fileName, err := utils.SaveFile(buffer, constants.ASSET_UPLOADS_PATH+subDir)
-	if err != nil {
+	// Upload to minio
+	info, err := config.UploadObjectToMinio(constants.MINIO_BUCKET_DOCUMENTS, fileName, documentData.Document.File, documentData.Document.Size)
+	if err != nil || info == nil {
 		errCode = http.StatusInternalServerError
 		err = constants.HTTP_500_ERROR_MESSAGE("save document")
 		return
 	}
+
 	result = &data.UploadDocumentResponse{
 		Url:  config.Env.Hostname + config.Env.ApiGroup + "/documents/" + fileName,
 		Path: fileName,
@@ -82,47 +48,66 @@ func (service *Service) Create(
 // Update existing document
 func (service *Service) Update(
 	ctx *context.Context,
-	url string,
+	objectName string,
 	option *data.DocumentQuery,
-	input *data.DocumentData,
+	documentData *data.DocumentData,
 ) (result *data.UploadDocumentResponse, errCode int, err error) {
-	isDeleted, err := utils.DeleteFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
-	if isDeleted {
-		result, errCode, err = service.Create(ctx, option, input)
+	// Delete object
+	err = config.DeleteObjectFromMinio(constants.MINIO_BUCKET_DOCUMENTS, objectName)
+	if err != nil {
+		errCode = http.StatusNotFound
+		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 		return
 	}
-	errCode = http.StatusNotFound
-	err = constants.HTTP_404_ERROR_MESSAGE("resource")
+
+	// Upload the new one
+	result, errCode, err = service.Create(ctx, option, documentData)
+	if err != nil {
+		errCode = http.StatusInternalServerError
+		err = constants.HTTP_500_ERROR_MESSAGE("upload")
+		return
+	}
 	return
 }
 
 // Delete document with matching id and return affected rows
-func (service *Service) Delete(ctx *context.Context, url string) (result bool, errCode int, err error) {
-	result, err = utils.DeleteFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
-	if err != nil || !result {
+func (service *Service) Delete(
+	ctx *context.Context,
+	objectName string,
+) (result bool, errCode int, err error) {
+	err = config.DeleteObjectFromMinio(constants.MINIO_BUCKET_DOCUMENTS, objectName)
+	if err != nil {
 		errCode = http.StatusNotFound
 		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
+	result = true
 	return
 }
 
 // Get document with matching id
 func (service *Service) Get(
 	ctx *context.Context,
-	url string,
-	option *data.DocumentQuery,
-) (result []byte, errCode int, err error) {
-	// Read buffer
-	buffer, err := utils.ReadFile(constants.ASSET_UPLOADS_PATH + subDir + "/" + url)
-	if err != nil || len(buffer) < 1 {
+	objectName string,
+	option data.DocumentQuery,
+) (url string, errCode int, err error) {
+	// Get cached presigned url
+	cachedUrl, ok := config.OtterCache.Get(objectName)
+	if ok && len(cachedUrl) > 0 {
+		url = cachedUrl
+		helpers.Logger.Info("Returned cached url!")
+		return
+	}
+
+	// Get new presigned url
+	presignedUrl, err := config.GetPresignedObjectFromMinio(constants.MINIO_BUCKET_DOCUMENTS, objectName, time.Minute*15)
+	if err != nil || presignedUrl == nil {
 		errCode = http.StatusNotFound
 		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
+	url = presignedUrl.String()
 
-	if err != nil {
-		errCode = http.StatusInternalServerError
-		err = constants.HTTP_500_ERROR_MESSAGE("resize document")
-		return
-	}
+	// Cache the new presigned url
+	config.OtterCache.Set(objectName, presignedUrl.String(), time.Minute*14)
+	helpers.Logger.Info("New url cached!")
 	return
 }

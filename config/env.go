@@ -15,6 +15,12 @@ type Environment struct {
 	ApiGroup     string `mapstructure:"API_GROUP"`
 	GinMode      string `mapstructure:"GIN_MODE"`
 	AllowedHosts string `mapstructure:"ALLOWED_HOSTS"`
+
+	// Minio config
+	MinioEndpoint        string `mapstructure:"MINIO_ENDPOINT"`
+	MinioAccessKeyID     string `mapstructure:"MINIO_ACCESS_KEY_ID"`
+	MinioAccessKeySecret string `mapstructure:"MINIO_ACCESS_KEY_SECRET"`
+	MinioUseSSL          bool   `mapstructure:"MINIO_USE_SSL"`
 }
 
 var Env = &Environment{}

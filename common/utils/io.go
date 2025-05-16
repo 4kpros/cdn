@@ -11,12 +11,6 @@ import (
 
 // ReadMultipartFile Reads multipart(form) file and returns the buffer
 func ReadMultipartFile(file multipart.File) ([]byte, error) {
-	defer func(File multipart.File) {
-		err := File.Close()
-		if err != nil {
-			return
-		}
-	}(file)
 	buffer, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err
@@ -57,7 +51,7 @@ func DeleteFile(path string) (isDeleted bool, err error) {
 	return
 }
 
-func SaveFile(buffer []byte, path string) (fileName string, err error) {
+func SaveFile(buffer []byte, path string) (fileAbsPath string, fileName string, err error) {
 	// Encode file name
 	initialFileName := fmt.Sprintf("%d_%s", time.Now().Unix(), GenerateRandomAlphaNumeric(20))
 
@@ -67,14 +61,8 @@ func SaveFile(buffer []byte, path string) (fileName string, err error) {
 	if err != nil {
 		return
 	}
-	defer func(tempFile *os.File) {
-		err = tempFile.Close()
-		if err != nil {
-			return
-		}
-	}(tempFile)
 
-	// Write butter to the file
+	// Write buffer to the file
 	_, err = tempFile.Write(buffer)
 	if err != nil {
 		return
@@ -82,5 +70,6 @@ func SaveFile(buffer []byte, path string) (fileName string, err error) {
 
 	// Retrieve the new file name
 	fileName = tempFile.Name()[len(absPath)+1:]
+	fileAbsPath = absPath + "/" + fileName
 	return
 }

@@ -30,33 +30,33 @@ func (controller *Controller) Create(
 func (controller *Controller) Update(
 	ctx *context.Context,
 	input *struct {
-		types.AssetUrl
+		types.FilePath
 		data.DocumentQuery
 		RawBody huma.MultipartFormFiles[data.DocumentData]
 	},
 ) (result *data.UploadDocumentResponse, errCode int, err error) {
 
-	result, errCode, err = controller.Service.Update(ctx, input.AssetUrl.Url, &input.DocumentQuery, input.RawBody.Data())
+	result, errCode, err = controller.Service.Update(ctx, input.FilePath.Path, &input.DocumentQuery, input.RawBody.Data())
 	return
 }
 
 func (controller *Controller) Delete(
 	ctx *context.Context,
 	input *struct {
-		types.AssetUrl
+		types.FilePath
 	},
 ) (result bool, errCode int, err error) {
-	result, errCode, err = controller.Service.Delete(ctx, input.AssetUrl.Url)
+	result, errCode, err = controller.Service.Delete(ctx, input.FilePath.Path)
 	return
 }
 
 func (controller *Controller) Get(
 	ctx *context.Context,
 	input *struct {
-		types.AssetUrl
+		types.FilePath
 		data.DocumentQuery
 	},
-) (result []byte, errCode int, err error) {
-	result, errCode, err = controller.Service.Get(ctx, input.AssetUrl.Url, &input.DocumentQuery)
+) (result string, errCode int, err error) {
+	result, errCode, err = controller.Service.Get(ctx, input.FilePath.Path, input.DocumentQuery)
 	return
 }

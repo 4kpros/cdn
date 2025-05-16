@@ -6,7 +6,3 @@ type UploadImageResponse struct {
 	Width  int    `json:"width" required:"false" doc:"Default width in pixels" example:"1280"`
 	Height int    `json:"height" required:"false" doc:"Default height in pixels" example:"720"`
 }
-
-type UploadMultipleImageResponse struct {
-	UploadImageResponse []UploadImageResponse `json:"images" required:"false" doc:"Image list" example:"[]"`
-}

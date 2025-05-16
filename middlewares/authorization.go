@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"go.uber.org/zap"
 )
 
 // AuthMiddleware Handles authentication for API requests.
@@ -30,14 +29,6 @@ func AuthMiddleware(api huma.API) func(huma.Context, func(huma.Context)) {
 
 		// Parse and decode the token
 		apiKey := helpers.ExtractApiKeyHeader(&ctx)
-		helpers.Logger.Warn(
-			"Request api key",
-			zap.String("Value: ", apiKey),
-		)
-		helpers.Logger.Warn(
-			"CDN api key",
-			zap.String("Value: ", config.Env.ApiKey),
-		)
 		if len(apiKey) < 1 {
 			errMessage = "Missing or bad authorization header! Please enter valid information."
 			_ = huma.WriteErr(api, ctx, http.StatusUnauthorized, errMessage, fmt.Errorf("%s", errMessage))

@@ -41,6 +41,10 @@ func Start() {
 	if err != nil {
 		panic(err)
 	}
+	// Register gin middlewares
+	engine.Use(middlewares.GinContextRegister())
+
+	// Group API
 	ginGroup := engine.Group(config.Env.ApiGroup)
 
 	// OpenAPI documentation based on huma
@@ -66,7 +70,7 @@ func Start() {
 	}
 	humaConfig.Info.Description = constants.OPEN_API_DESCRIPTION
 	humaApi := humagin.NewWithGroup(engine, ginGroup, humaConfig)
-	// Register middlewares
+	// Register huma middlewares
 	humaApi.UseMiddleware(
 		middlewares.HeadersMiddleware(humaApi),
 		middlewares.CorsMiddleware(humaApi),
