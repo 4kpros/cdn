@@ -132,6 +132,7 @@ func (service *Service) Get(
 		errCode = http.StatusNotFound
 		err = constants.HTTP_404_ERROR_MESSAGE("resource")
 	}
+	url = presignedUrl.String()
 
 	// Cache the new presigned url
 	config.OtterCache.Set(objectName, presignedUrl.String(), time.Minute*14)
