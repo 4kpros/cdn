@@ -12,7 +12,18 @@ This project leverages Docker and Make to streamline development and deployment.
 
 # Usage
 
-1. Build and run docker image
+1. Clone, build and run docker image
+
+    Clone the repository:
+    ```
+        git clone https://github.com/EMENEC-FINANCE/cdn.git
+        cd cdn
+    ```
+
+    Add env file:
+    ```
+        cp .env.example app.env
+    ```
 
     To build and run locally using Docker, run the following command:
     ```
