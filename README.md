@@ -31,30 +31,6 @@ This project leverages Docker and Make to streamline development and deployment.
     ```
     This will build and start the Docker container.
 
-2. Logging into GitHub Container Registry
-
-    Before pushing or pulling images, you need to log in to the GitHub Container Registry:
-    ```
-        make docker-ghcr-login
-    ```
-    You will be prompted to enter your GitHub personal access token.
-
-3. Pushing Image to GitHub Container Registry
-
-    To push a new image to the GitHub Container Registry, run:
-    ```
-        make docker-ghcr-push
-    ```
-    You will be prompted to enter the new version tag.
-
-4. Pulling Image from GitHub Container Registry
-
-    To pull a specific image from the GitHub Container Registry, run:
-    ```
-        make docker-ghcr-pull
-    ```
-    You will be prompted to enter the desired image tag.
-
 
 # Update GitHub Action Secrets for continuous integration(build and package)
 
