@@ -14,28 +14,32 @@ This project leverages Docker and Make to streamline development and deployment.
 
 1. Clone, build and run docker image
 
-    Clone the repository:
-    ```
-        git clone https://github.com/EMENEC-FINANCE/cdn.git
-        cd cdn
-    ```
+   Clone the repository:
 
-    Add env file:
-    ```
-        cp .env.example app.env
-    ```
+   ```
+       git clone https://github.com/EMENEC-FINANCE/cdn.git
+       cd cdn
+   ```
 
-    Remove comment line on this file docker/cdn/Dockerfile:
-    ```
-        # COPY --from=builder /app/app.env ./app.env
-    ```
+   Add env file:
 
-    To build and run locally using Docker, run the following command:
-    ```
-        make docker-cdn
-    ```
-    This will build and start the Docker container.
+   ```
+       cp .env.example app.env
+   ```
 
+   Uncomment this line on this file docker/cdn/Dockerfile:
+
+   ```
+       # COPY --from=builder /app/app.env ./app.env
+   ```
+
+   To build and run locally using Docker, run the following command:
+
+   ```
+       make docker-cdn
+   ```
+
+   This will build and start the Docker container.
 
 # Update GitHub Action Secrets for continuous integration(build and package)
 
@@ -43,8 +47,7 @@ Go to this link: [GitHub Action Secrets](https://github.com/EMENEC-FINANCE/cdn/s
 
 - ------------- On your GitHub Action Secrets page -------------
 
-    - Set Secrets `GHCR_USERNAME` `GHCR_PASSWORD` with value your GitHub credentials. `GHCR_PASSWORD` is your personal access token with `write package` permission enabled
-        
+  - Set Secrets `GHCR_USERNAME` `GHCR_PASSWORD` with value your GitHub credentials. `GHCR_PASSWORD` is your personal access token with `write package` permission enabled
 
 # Makefile Targets
 
@@ -53,7 +56,6 @@ Go to this link: [GitHub Action Secrets](https://github.com/EMENEC-FINANCE/cdn/s
 - `docker-ghcr-push`: Builds the Docker image and pushes it to the GitHub Container Registry.
 
 - `docker-ghcr-pull`: Pulls a specific image from the GitHub Container Registry.
-
 
 # Additional Notes
 
