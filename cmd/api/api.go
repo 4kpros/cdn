@@ -80,9 +80,21 @@ func Start() {
 	// Register endpoints
 	// Serve static files as favicon
 	engine.StaticFS("/assets", http.Dir(constants.ASSET_APP_PATH))
-	// Register endpoint for docs with support for custom template
+	// Register endpoints
 	ginGroup.GET("/docs", func(ctx *gin.Context) {
-		ctx.Data(200, "text/html", []byte(*config.OpenAPITemplates.Scalar))
+		ctx.Data(200, "text/html", config.OpenAPITemplates.Docs)
+	})
+	ginGroup.GET("/docs/scalar", func(ctx *gin.Context) {
+		ctx.Data(200, "text/html", config.OpenAPITemplates.Scalar)
+	})
+	ginGroup.GET("/docs/swagger", func(ctx *gin.Context) {
+		ctx.Data(200, "text/html", config.OpenAPITemplates.Swagger)
+	})
+	ginGroup.GET("/docs/redocly", func(ctx *gin.Context) {
+		ctx.Data(200, "text/html", config.OpenAPITemplates.Redocly)
+	})
+	ginGroup.GET("/docs/stoplight", func(ctx *gin.Context) {
+		ctx.Data(200, "text/html", config.OpenAPITemplates.Stoplight)
 	})
 	registerEndpoints(&humaApi)
 

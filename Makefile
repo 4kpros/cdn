@@ -4,6 +4,7 @@ clean:
 	@go clean -cache
 	@go clean -testcache
 	@go clean -modcache
+	@go mod tidy
 install:
 	@go mod download
 update:
