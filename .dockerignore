@@ -59,7 +59,7 @@ go.work.sum
 # env, keys, and others sensibles files
 *.env
 *.env.*
-!.env.example
+!app.env
 *.pem
 
 /build
