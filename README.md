@@ -25,6 +25,11 @@ This project leverages Docker and Make to streamline development and deployment.
         cp .env.example app.env
     ```
 
+    Remove comment line on this file docker/cdn/Dockerfile:
+    ```
+        # COPY --from=builder /app/app.env ./app.env
+    ```
+
     To build and run locally using Docker, run the following command:
     ```
         make docker-cdn
