@@ -2,7 +2,9 @@ package config
 
 import (
 	"context"
+	tls "crypto/tls"
 	"io"
+	http "net/http"
 	"net/url"
 	"time"
 
@@ -27,6 +29,11 @@ func ConnectMinio() error {
 		Creds:  credentials.NewStaticV4(Env.MinioAccessKeyID, Env.MinioAccessKeySecret, ""),
 		Secure: Env.MinioUseSSL,
 		Region: constants.MINIO_LOCATION_DEFAULT,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: Env.InsecureSkipVerify, // Ignore les certificats invalides
+			},
+		},
 	})
 	if err != nil || MinioClient == nil {
 		helpers.Logger.Warn(

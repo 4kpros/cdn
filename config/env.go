@@ -21,6 +21,7 @@ type Environment struct {
 	MinioAccessKeyID     string `mapstructure:"MINIO_ACCESS_KEY_ID"`
 	MinioAccessKeySecret string `mapstructure:"MINIO_ACCESS_KEY_SECRET"`
 	MinioUseSSL          bool   `mapstructure:"MINIO_USE_SSL"`
+	InsecureSkipVerify   bool   `mapstructure:"INSECURE_SKIP_VERIFY"`
 }
 
 var Env = &Environment{}
