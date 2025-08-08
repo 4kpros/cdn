@@ -36,7 +36,7 @@ RUN apk update &&\
 # Copy the binary and assets to the container
 COPY --from=builder /app/.build/main ./main
 COPY --from=builder /app/assets ./assets
-COPY --from=builder /app/app.env ./app.env
+# COPY --from=builder /app/app.env ./app.env
 RUN chmod +x /app/main
 
 EXPOSE 3100
