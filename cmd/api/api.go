@@ -77,9 +77,10 @@ func Start() {
 		middlewares.AuthMiddleware(humaApi),
 	)
 
-	// Register endpoints
 	// Serve static files as favicon
 	engine.StaticFS("/assets", http.Dir(constants.ASSET_APP_PATH))
+	engine.StaticFS("/openapi", http.Dir(constants.ASSET_OPENAPI_PATH))
+
 	// Register endpoints
 	ginGroup.GET("/docs", func(ctx *gin.Context) {
 		ctx.Data(200, "text/html", config.OpenAPITemplates.Docs)
@@ -92,9 +93,6 @@ func Start() {
 	})
 	ginGroup.GET("/docs/redocly", func(ctx *gin.Context) {
 		ctx.Data(200, "text/html", config.OpenAPITemplates.Redocly)
-	})
-	ginGroup.GET("/docs/stoplight", func(ctx *gin.Context) {
-		ctx.Data(200, "text/html", config.OpenAPITemplates.Stoplight)
 	})
 	registerEndpoints(&humaApi)
 
