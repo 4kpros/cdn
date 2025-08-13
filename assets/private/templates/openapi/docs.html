@@ -7,38 +7,8 @@
     <!-- Favicon -->
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
 
-    <!-- Cache control in HTML (fallback if server headers missing) -->
-    <!-- In real prod: prefer setting Cache-Control in Traefik/Nginx -->
+    <!-- Cache control fallback (better to set via server headers in production) -->
     <meta http-equiv="Cache-Control" content="public, max-age=3600" />
-
-    <!-- Preload & Prefetch UI page -->
-    <!-- rel=prefetch will tell the browser to download the page in the background -->
-    <link rel="prefetch" href="/api/v1/docs/redocly" as="document" />
-    <link rel="prefetch" href="/api/v1/docs/scalar" as="document" />
-    <link rel="prefetch" href="/api/v1/docs/swagger" as="document" />
-    <!-- Preload heavy Redocly JS from CDN -->
-    <link
-      rel="preload"
-      href="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"
-      as="script"
-    />
-    <!-- Preload heavy Scalar JS from CDN -->
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/npm/@scalar/api-reference"
-      as="script"
-    />
-    <!-- Preload heavy Swagger JS from CDN -->
-    <link
-      rel="preload"
-      href="https://unpkg.com/swagger-ui-dist@5.27.1/swagger-ui-bundle.js"
-      as="script"
-    />
-    <link
-      rel="preload"
-      href="https://unpkg.com/swagger-ui-dist@5.27.1/swagger-ui-standalone-preset.js"
-      as="script"
-    />
 
     <style>
       body {
@@ -129,15 +99,15 @@
       <p>Select a documentation format below</p>
       <div class="buttons-container">
         <!-- Scalar -->
-        <a rel="prerender" href="{{ .BasePath }}/docs/scalar">
+        <a href="{{ .BasePath }}/docs/scalar">
           <button class="button scalar">Scalar</button>
         </a>
         <!-- Swagger -->
-        <a rel="prerender" href="{{ .BasePath }}/docs/swagger">
+        <a href="{{ .BasePath }}/docs/swagger">
           <button class="button swagger">Swagger</button>
         </a>
         <!-- Redocly -->
-        <a rel="prerender" href="{{ .BasePath }}/docs/redocly">
+        <a href="{{ .BasePath }}/docs/redocly">
           <button class="button redocly">Redocly</button>
         </a>
       </div>
