@@ -21,7 +21,7 @@ func ResizeImage(inputBuffer []byte, width int, height int, quality int) (output
 		}
 	}
 	if !bimg.IsTypeNameSupported(inputType) {
-		if inputType != ".ico" {
+		if inputType != "ico" {
 			err = fmt.Errorf("%s %s", "Unsupported image type:", inputType)
 			helpers.Logger.Warn(
 				"Unsupported image type",
@@ -31,7 +31,8 @@ func ResizeImage(inputBuffer []byte, width int, height int, quality int) (output
 		}
 	}
 	// Check for resizable types
-	if inputType == "pdf" || inputType == "svg" || inputType == "magick" || inputType == "heif" || inputType == "avif" || inputType == "ico" {
+	if inputType == "pdf" || inputType == "svg" || inputType == "magick" ||
+		inputType == "heif" || inputType == "avif" || inputType == "ico" {
 		outputSize, err = bimg.NewImage(inputBuffer).Size()
 		outputBuffer = inputBuffer
 		return
