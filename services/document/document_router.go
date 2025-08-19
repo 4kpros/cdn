@@ -44,7 +44,7 @@ func RegisterEndpoints(
 			ctx context.Context,
 			input *struct {
 				data.DocumentQuery
-				Body huma.MultipartFormFiles[data.DocumentData]
+				RawBody huma.MultipartFormFiles[data.DocumentData]
 			},
 		) (*struct{ Body *data.UploadDocumentResponse }, error) {
 			result, errCode, err := controller.Create(&ctx, input)
@@ -77,7 +77,7 @@ func RegisterEndpoints(
 			input *struct {
 				types.FilePath
 				data.DocumentQuery
-				Body huma.MultipartFormFiles[data.DocumentData]
+				RawBody huma.MultipartFormFiles[data.DocumentData]
 			},
 		) (*struct{ Body *data.UploadDocumentResponse }, error) {
 			result, errCode, err := controller.Update(&ctx, input)
