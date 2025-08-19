@@ -20,10 +20,10 @@ func (controller *Controller) Create(
 	ctx *context.Context,
 	input *struct {
 		data.DocumentQuery
-		Body huma.MultipartFormFiles[data.DocumentData]
+		RawBody huma.MultipartFormFiles[data.DocumentData]
 	},
 ) (result *data.UploadDocumentResponse, errCode int, err error) {
-	result, errCode, err = controller.Service.Create(ctx, &input.DocumentQuery, input.Body.Data())
+	result, errCode, err = controller.Service.Create(ctx, &input.DocumentQuery, input.RawBody.Data())
 	return
 }
 
@@ -32,11 +32,11 @@ func (controller *Controller) Update(
 	input *struct {
 		types.FilePath
 		data.DocumentQuery
-		Body huma.MultipartFormFiles[data.DocumentData]
+		RawBody huma.MultipartFormFiles[data.DocumentData]
 	},
 ) (result *data.UploadDocumentResponse, errCode int, err error) {
 
-	result, errCode, err = controller.Service.Update(ctx, input.FilePath.Path, &input.DocumentQuery, input.Body.Data())
+	result, errCode, err = controller.Service.Update(ctx, input.FilePath.Path, &input.DocumentQuery, input.RawBody.Data())
 	return
 }
 
