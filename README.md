@@ -17,7 +17,7 @@ This project leverages Docker and Make to streamline development and deployment.
    Clone the repository:
 
    ```
-       git clone https://github.com/EMENEC-FINANCE/cdn.git
+       git clone https://github.com/4kpros/cdn.git
        cd cdn
    ```
 
@@ -43,7 +43,7 @@ This project leverages Docker and Make to streamline development and deployment.
 
 # Update GitHub Action Secrets for continuous integration(build and package)
 
-Go to this link: [GitHub Action Secrets](https://github.com/EMENEC-FINANCE/cdn/settings/secrets/actions)
+Go to this link: [GitHub Action Secrets](https://github.com/4kpros/cdn/settings/secrets/actions)
 
 - ------------- On your GitHub Action Secrets page -------------
 
