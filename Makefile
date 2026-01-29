@@ -2,13 +2,15 @@
 .PHONY: clean install update test build run
 clean:
 	@go clean -cache
-	@go clean -testcache
 	@go clean -modcache
-	@go mod tidy
+	@go clean -testcache
+	@rm go.sum
 install:
 	@go mod download
 update:
-	@go get -u all
+	@go mod tidy
+	@go get -u ./...
+	@go mod tidy
 test:
 	@go test -v ./cmd/test/...
 build:
@@ -20,6 +22,7 @@ run:
 .PHONY: scan
 scan:
 	@go install golang.org/x/vuln/cmd/govulncheck@latest
+	@echo "Running vulnerability scan..."
 	@govulncheck ./...
 
 
