@@ -1,15 +1,42 @@
 services:
-  cdn:
+  cdn-build:
     container_name: cdn
     build:
       context: .
       target: cdn
       dockerfile: ./docker/cdn/Dockerfile
     restart: on-failure
+    ports:
+      - "3100:3100"
     volumes:
       - cdn-data:/app/assets
+
+  # For local development only
+  minio:
+    container_name: minio
+    image: minio/minio
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - minio-data:/data
+    env_file:
+      - ./app.env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY_ID:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ACCESS_KEY_SECRET:-administrator}
+    command: server /data --console-address ":9001"
+
+  cdn:
+    container_name: cdn
+    image: ghcr.io/4kpros/cdn/cdn:latest
     ports:
       - "13100:3100"
+    depends_on:
+      - minio
+    volumes:
+      - ./app.env:/app/app.env
 
 volumes:
   cdn-data:
+  minio-data:
