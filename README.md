@@ -12,6 +12,16 @@ This project leverages Docker and Make to streamline development and deployment.
 
 1. Setup the environment
 
+   Clone the repository:
+
+   ```
+       git clone https://github.com/4kpros/cdn.git
+   ```
+
+   ```
+       cd cdn
+   ```
+
    ```
     cp .env.example app.env
    ```
@@ -33,6 +43,9 @@ This project leverages Docker and Make to streamline development and deployment.
 
    ```
        git clone https://github.com/4kpros/cdn.git
+   ```
+
+   ```
        cd cdn
    ```
 
