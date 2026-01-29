@@ -27,8 +27,14 @@ scan:
 
 
 # ------------------ Docker commands ------------------
-.PHONY: docker-cdn
+.PHONY: docker-cdn-build docker-cdn
+docker-cdn-build:
+	@docker compose up --build --no-deps -d cdn-build
 docker-cdn:
+	@echo "Launching minio..."
+	@docker compose up --build --no-deps -d minio
+	@echo ""
+	@echo "Launching cdn..."
 	@docker compose up --build --no-deps -d cdn
 
 .PHONY: docker-ghcr-login
@@ -45,10 +51,10 @@ docker-ghcr-push-specific:
 	@echo "" ;\
 	echo "Tag - GitHub Docker Registry" ;\
 	gCorp="4kpros" ;\
-	gRepo="go-cdn" ;\
+	gRepo="cdn" ;\
 	read -p "Enter your package name(cdn): " gPackage; gTag=$${gPackage:-"cdn"} ;\
 	read -p "Enter your tag(default is 1): " gTag; gTag=$${gTag:-"1"} ;\
-	docker tag go-cdn-$$gPackage ghcr.io/$$gCorp/$$gRepo/$$gPackage:$$gTag ;\
+	docker tag cdn-$$gPackage ghcr.io/$$gCorp/$$gRepo/$$gPackage:$$gTag ;\
 	echo "" ;\
 	echo "Pushing $$gPackage - GitHub Docker Registry" ;\
 	docker push ghcr.io/$$gCorp/$$gRepo/$$gPackage:$$gTag;
@@ -56,7 +62,7 @@ docker-ghcr-pull-specific:
 	@echo "" ;\
 	echo "Tag - GitHub Docker Registry" ;\
 	gCorp="4kpros" ;\
-	gRepo="go-cdn" ;\
+	gRepo="cdn" ;\
 	read -p "Enter your package name(cdn): " gPackage; gTag=$${gPackage:-"cdn"} ;\
 	read -p "Enter your tag(default is 1): " gTag; gTag=$${gTag:-"1"} ;\
 	echo "" ;\

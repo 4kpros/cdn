@@ -78,33 +78,30 @@ func CreateBucket(bucketName string, location string) error {
 		)
 		return fmt.Errorf("No available minio client!")
 	}
-	err := MinioClient.MakeBucket(context.Background(), bucketName, minio.MakeBucketOptions{Region: location})
+	
+	exists, err := MinioClient.BucketExists(context.Background(), bucketName)
 	if err != nil {
-		// Check to see if we already own this bucket
-		exists, errBucketExists := MinioClient.BucketExists(context.Background(), bucketName)
-		if errBucketExists != nil {
-			helpers.Logger.Warn(
-				"Failed to check if the bucket exists!",
-				zap.String("Error: ", errBucketExists.Error()),
-			)
-			return errBucketExists
-		}
-		if exists {
-			helpers.Logger.Info(
-				"This bucket already exists!",
-				zap.String("Bucket name: ", bucketName),
-			)
-			return nil
-		}
-		helpers.Logger.Warn(
-			"Failed to add new bucket!",
-			zap.String("Error: ", err.Error()),
+		helpers.Logger.Error(
+			"Error connecting to MinIO during bucket check",
+			zap.String("bucket", bucketName),
+			zap.Error(err),
 		)
 		return err
-
 	}
+
+	if !exists {
+		helpers.Logger.Info("Creating new bucket", zap.String("bucket", bucketName))
+		err = MinioClient.MakeBucket(context.Background(), bucketName, minio.MakeBucketOptions{Region: location})
+		if err != nil {
+			helpers.Logger.Error("Failed to create bucket", zap.Error(err))
+			return err
+		}
+	} else {
+		helpers.Logger.Info("Bucket already exists", zap.String("bucket", bucketName))
+	}
+
 	helpers.Logger.Info(
-		"Minio bucked created!",
+		"Minio bucked loaded!",
 		zap.String("Bucket name: ", bucketName),
 	)
 

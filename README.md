@@ -8,9 +8,24 @@ This project leverages Docker and Make to streamline development and deployment.
 
 - Make installed
 
-- A GitHub account with a personal access token with the necessary permissions
+# Pull and run docker image locally
 
-# Usage
+1. Setup the environment
+
+   ```
+    cp .env.example app.env
+   ```
+
+2. Run the CDN
+
+   Pull the Docker image from GitHub Container Registry:
+
+   ```
+       make docker-cdn
+   ```
+
+
+# Build your own docker image
 
 1. Clone, build and run docker image
 
@@ -21,22 +36,10 @@ This project leverages Docker and Make to streamline development and deployment.
        cd cdn
    ```
 
-   Add env file:
-
-   ```
-       cp .env.example app.env
-   ```
-
-   Uncomment this line on this file docker/cdn/Dockerfile:
-
-   ```
-       # COPY --from=builder /app/app.env ./app.env
-   ```
-
    To build and run locally using Docker, run the following command:
 
    ```
-       make docker-cdn
+       make docker-cdn-build
    ```
 
    This will build and start the Docker container.
